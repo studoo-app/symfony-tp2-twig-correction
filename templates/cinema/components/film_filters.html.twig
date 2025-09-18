@@ -1,0 +1,53 @@
+{# Macro pour formater la durée #}
+{% macro format_duree(minutes) %}
+    {% set heures = (minutes / 60)|round(0, 'floor') %}
+    {% set mins = minutes % 60 %}
+    {% if heures > 0 %}
+        {{ heures }}h{% if mins > 0 %} {{ mins }}min{% endif %}
+    {% else %}
+        {{ mins }}min
+    {% endif %}
+{% endmacro %}
+
+{# Macro pour générer des étoiles #}
+{% macro etoiles(note, max = 5) %}
+    {% set note_arrondie = (note * 2)|round / 2 %}
+    {% for i in 1..max %}
+        {% if i <= note_arrondie %}
+            <i class="bi bi-star-fill text-warning"></i>
+        {% elseif i - 0.5 <= note_arrondie %}
+            <i class="bi bi-star-half text-warning"></i>
+        {% else %}
+            <i class="bi bi-star text-muted"></i>
+        {% endif %}
+    {% endfor %}
+    <span class="ms-1 small ">({{ note }}/{{ max }})</span>
+{% endmacro %}
+
+{# Macro pour badge de genre #}
+{% macro genre_badge(genre) %}
+    {% set genre_classes = {
+        'action': 'bg-danger',
+        'comedie': 'bg-success',
+        'drame': 'bg-primary',
+        'science-fiction': 'bg-info',
+        'thriller': 'bg-dark',
+        'horreur': 'bg-warning text-dark',
+        'animation': 'bg-secondary'
+    } %}
+
+    {% set genre_labels = {
+        'action': 'Action',
+        'comedie': 'Comédie',
+        'drame': 'Drame',
+        'science-fiction': 'Sci-Fi',
+        'thriller': 'Thriller',
+        'horreur': 'Horreur',
+        'animation': 'Animation'
+    } %}
+
+    {% set class = genre_classes[genre] ?? 'bg-secondary' %}
+    {% set label = genre_labels[genre] ?? (genre|title) %}
+
+    <span class="badge {{ class }} rounded-pill">{{ label }}</span>
+{% endmacro %}

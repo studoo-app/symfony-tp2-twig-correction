@@ -1,0 +1,38 @@
+{#
+Template de base pour toutes les modales
+Utilise le système embed de Twig pour la personnalisation
+#}
+
+<div class="modal fade" id="{{ modal_id }}" tabindex="-1" aria-labelledby="{{ modal_id }}Label" aria-hidden="true">
+    <div class="modal-dialog{% block modal_size %}{% endblock %}">
+        <div class="modal-content">
+            {% block modal_header %}
+                <div class="modal-header{% block header_class %}{% endblock %}">
+                    <h1 class="modal-title fs-5" id="{{ modal_id }}Label">
+                        {% block modal_title %}Titre par défaut{% endblock %}
+                    </h1>
+                    {% block header_extra %}{% endblock %}
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            {% endblock %}
+
+            {% block modal_body %}
+                <div class="modal-body{% block body_class %}{% endblock %}">
+                    {% block modal_content %}
+                        <p>Contenu par défaut de la modale</p>
+                    {% endblock %}
+                </div>
+            {% endblock %}
+
+            {% block modal_footer %}
+                <div class="modal-footer{% block footer_class %}{% endblock %}">
+                    {% block footer_buttons %}
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Fermer
+                        </button>
+                    {% endblock %}
+                </div>
+            {% endblock %}
+        </div>
+    </div>
+</div>

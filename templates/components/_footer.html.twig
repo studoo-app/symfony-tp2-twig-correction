@@ -1,0 +1,8 @@
+<footer class="mt-5 bg-dark text-light py-4 fixed-bottom">
+    <div class="container d-flex justify-content-between small">
+        <p class="mb-1">CinemaVsion, 34 rue à cote de celle qui va la bas, 94567 QuelquePart</p>
+        <p class="mb-1">&copy; {{ "now"|date("Y") }} CinémaVision - Tous droits réservés.</p>
+        <p class="mb-1">Ouvert quand c'est ouvert !</p>
+        {% block footer_extra %}{% endblock %}
+    </div>
+</footer>

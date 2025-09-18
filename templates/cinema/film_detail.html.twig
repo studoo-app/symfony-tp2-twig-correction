@@ -1,0 +1,178 @@
+{% extends 'base.html.twig' %}
+{% from 'cinema/components/film_filters.html.twig' import format_duree, etoiles, genre_badge %}
+
+{% block title %}{{ film.titre }} - CinéVision{% endblock %}
+
+{% block body %}
+    <div class="container py-4">
+        {# Breadcrumb #}
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('app_cinema') }}">Accueil</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ path('cinema_programmation') }}">Programmation</a>
+                </li>
+                <li class="breadcrumb-item active">{{ film.titre }}</li>
+            </ol>
+        </nav>
+
+        <div class="row">
+            {# Colonne affiche #}
+            <div class="col-lg-4 col-md-5 mb-4">
+                <div class="position-sticky" style="top: 20px;">
+                    <img src="{{ film.image_affiche }}"
+                         class="img-fluid rounded shadow"
+                         alt="{{ film.titre }}"
+                    style="width: 100%; height: auto; object-fit: cover;"
+                    >
+
+                    <div class="d-grid gap-2 mt-3">
+                        {% if film.bande_annonce %}
+                            <button type="button" class="btn btn-danger"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#bandeAnnonceModal">
+                                <i class="bi bi-play-circle me-2"></i>
+                                Bande-annonce
+                            </button>
+                        {% endif %}
+
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-secondary">
+                                <i class="bi bi-heart"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary">
+                                <i class="bi bi-share"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary">
+                                <i class="bi bi-bookmark"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Colonne informations #}
+            <div class="col-lg-8 col-md-7">
+                <div class="mb-4">
+                    <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                        <h1 class="mb-0">{{ film.titre }}</h1>
+                        {{ genre_badge(film.genre) }}
+                    </div>
+
+                    {% if film.titre_original != film.titre %}
+                        <p class="text-muted h5 mb-3">{{ film.titre_original }}</p>
+                    {% endif %}
+
+                    {# Informations principales #}
+                    <div class="row g-3 mb-4">
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-clock text-primary me-2"></i>
+                                <div>
+                                    <small class="text-muted d-block">Durée</small>
+                                    <strong>{{ format_duree(film.duree) }}</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-calendar text-primary me-2"></i>
+                                <div>
+                                    <small class="text-muted d-block">Année</small>
+                                    <strong>{{ film.annee }}</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-person-fill text-primary me-2"></i>
+                                <div>
+                                    <small class="text-muted d-block">Réalisateur</small>
+                                    <strong>{{ film.realisateur }}</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-shield-check text-primary me-2"></i>
+                                <div>
+                                    <small class="text-muted d-block">Classification</small>
+                                    <strong>{{ film.classification }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Notes #}
+                    {% if film.note_presse or film.note_spectateurs %}
+                        <div class="row g-3 mb-4">
+                            {% if film.note_presse %}
+                                <div class="col-md-6">
+                                    <h6 class="text-muted mb-2">Note presse</h6>
+                                    <div class="d-flex align-items-center">
+                                        {{ etoiles(film.note_presse) }}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if film.note_spectateurs %}
+                                <div class="col-md-6">
+                                    <h6 class="text-muted mb-2">Note spectateurs</h6>
+                                    <div class="d-flex align-items-center">
+                                        {{ etoiles(film.note_spectateurs) }}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                {# Synopsis #}
+                <div class="mb-4">
+                    <h3 class="h5 mb-3">Synopsis</h3>
+                    <p class="lead">{{ film.synopsis }}</p>
+                </div>
+
+                {# Distribution #}
+                <div class="mb-4">
+                    <h3 class="h5 mb-3">Distribution</h3>
+                    <div class="row">
+                        {% for acteur in film.acteurs %}
+                            <div class="col-md-6 mb-2">
+                                <i class="bi bi-person-circle me-2 text-muted"></i>
+                                {{ acteur|title }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {# Séances #}
+                {% if film.seances %}
+                    <div class="mb-4">
+                        <h3 class="h5 mb-3">Séances aujourd'hui</h3>
+                        <div class="row g-2">
+                            {% for seance in film.seances %}
+                                <div class="col-auto">
+                                    <div class="border rounded p-2 text-center">
+                                        <div class="fw-bold">{{ seance.horaire }}</div>
+                                        <small class="text-muted">
+                                            Salle {{ seance.salle }} - {{ seance.version }}
+                                        </small>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {# Modal bande-annonce (voir question 5.3) #}
+    {% include 'cinema/components/_modal_bande_annonce.html.twig' with {'film': film} %}
+{% endblock %}

@@ -1,0 +1,71 @@
+{% embed 'cinema/components/_modal_base.html.twig' with {'modal_id': 'bandeAnnonceModal'} %}
+
+    {% block modal_size %} modal-xl{% endblock %}
+
+    {% block header_class %} bg-dark text-white{% endblock %}
+
+    {% block modal_title %}
+        <i class="bi bi-play-circle me-2"></i>
+        {{ film.titre }} - Bande-annonce
+    {% endblock %}
+
+    {% block header_extra %}
+        {% if film.langue %}
+            <span class="badge bg-secondary me-2">{{ film.langue }}</span>
+        {% endif %}
+        {% if film.classification %}
+            <span class="badge bg-warning text-dark">{{ film.classification }}</span>
+        {% endif %}
+    {% endblock %}
+
+    {% block modal_content %}
+        <div class="ratio ratio-16x9 mb-3">
+            {% if film.bande_annonce %}
+                {# Convertir l'URL YouTube pour l'embed #}
+                {% set youtube_id = film.bande_annonce|split('watch?v=')|last|split('&')|first %}
+                <iframe
+                    src="https://www.youtube.com/embed/{{ youtube_id }}?autoplay=1&rel=0"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                    class="rounded">
+                </iframe>
+            {% else %}
+                <div class="d-flex align-items-center justify-content-center bg-light rounded">
+                    <div class="text-center text-muted">
+                        <i class="bi bi-film display-1 mb-3"></i>
+                        <p class="mb-0">Bande-annonce non disponible</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        {# Informations additionnelles #}
+        <div class="row g-3">
+            <div class="col-md-8">
+                <h6 class="mb-2">Synopsis</h6>
+                <p class="text-muted small">{{ film.synopsis|slice(0, 200) }}...</p>
+            </div>
+            <div class="col-md-4">
+                <h6 class="mb-2">Informations</h6>
+                <ul class="list-unstyled small">
+                    <li><strong>Durée :</strong> {{ film.duree }} minutes</li>
+                    <li><strong>Genre :</strong> {{ film.genre|title }}</li>
+                    <li><strong>Année :</strong> {{ film.annee }}</li>
+                    <li><strong>Réalisateur :</strong> {{ film.realisateur }}</li>
+                </ul>
+            </div>
+        </div>
+    {% endblock %}
+
+    {% block footer_buttons %}
+        <a href="{{ path('cinema_film_detail', {'id': film.id}) }}" class="btn btn-primary">
+            <i class="bi bi-info-circle me-1"></i>
+            Voir toutes les infos
+        </a>
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+            Fermer
+        </button>
+    {% endblock %}
+
+{% endembed %}

@@ -1,0 +1,81 @@
+{#<div class="col">#}
+{#    <div class="card h-100">#}
+{#        <img src="{{ f.image_affiche }}" class="card-img-top " alt="...">#}
+{#        <div class="card-body">#}
+{#            <h5 class="card-title">{{ f.titre }}</h5>#}
+{#            <p class="card-text"> Les seances</p>#}
+{#            <ul>#}
+{#                {% for s in f.seances %}#}
+{#                    <li>{{ s.horaire }} - {{ s.salle }} ({{ s.version }})</li>#}
+{#                {% endfor %}#}
+{#            </ul>#}
+{#        </div>#}
+{#        <div class="card-footer">#}
+{#            <a class="btn btn-primary" href="{{ path('cinema_film_detail', {'id': f.id}) }}">Voir le film</a>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+
+{% from 'cinema/components/film_filters.html.twig' import format_duree, etoiles, genre_badge %}
+
+<div class="col-lg-4 col-md-6">
+    <div class="card h-100 shadow-sm">
+        <div class="position-relative">
+            <img src="{{ film.image_affiche }}"
+                 class="card-img-top"
+                 alt="{{ film.titre }}"
+                 style="height: 300px; object-fit: cover;">
+            <div class="position-absolute top-0 end-0 m-2">
+                {{ genre_badge(film.genre) }}
+            </div>
+            {% if film.note_spectateurs %}
+                <div class="position-absolute bottom-0 start-0 m-2 bg-dark bg-opacity-75 text-white px-2 py-1 rounded">
+                    {{ etoiles(film.note_spectateurs) }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="card-body">
+            <h5 class="card-title">{{ film.titre }}</h5>
+            {% if film.titre_original != film.titre %}
+                <p class="text-muted small mb-2">{{ film.titre_original }}</p>
+            {% endif %}
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <small class="text-muted">
+                        <i class="bi bi-clock me-1"></i>
+                        {{ format_duree(film.duree) }}
+                    </small>
+                </div>
+                <div class="col-6">
+                    <small class="text-muted">
+                        <i class="bi bi-calendar me-1"></i>
+                        {{ film.annee }}
+                    </small>
+                </div>
+            </div>
+
+            <p class="card-text">
+                {{ film.synopsis|length > 120 ? film.synopsis|slice(0, 120) ~ '...' : film.synopsis }}
+            </p>
+
+            <div class="mb-3">
+                <h6 class="text-muted mb-1">Avec :</h6>
+                <small>{{ film.acteurs|slice(0, 3)|map(actor => actor|title)|join(', ') }}
+                    {% if film.acteurs|length > 3 %}...{% endif %}
+                </small>
+            </div>
+        </div>
+
+        <div class="card-footer bg-transparent">
+            <div class="d-grid gap-2">
+                <a href="{{ path('cinema_film_detail', {'id': film.id}) }}"
+                   class="btn btn-primary">
+                    <i class="bi bi-eye me-1"></i>
+                    Voir les détails
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

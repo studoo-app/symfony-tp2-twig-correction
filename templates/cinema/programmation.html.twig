@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Programmation{% endblock %}
+
+{% block body %}
+    <div class="row row-cols-1 rows-cols-md-3 row-cols-lg-5 g-4 mt-2">
+        {% for film in programmation %}
+            {% include 'cinema/components/_card_film.html.twig' with {
+                'film': film
+            } %}
+        {%  endfor %}
+    </div>
+{% endblock %}
+
